@@ -9,7 +9,6 @@ export default class LoginPage{
         await this.page.locator('#password-input').fill(password);
     }
     async clickToLogin(){
-        // await this.page.getByRole('button', { name: 'Login' }).click()
 
         await Promise.all([
             // await this.page.waitForNavigation({waitUntil: "networkidle"}),
