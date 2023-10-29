@@ -19,11 +19,12 @@ export default class AddIntegration {
     }
 
     async createIntegration({
-        url = '',
-        token = '',
-        accessId = 'defaultParam1',
-        accessKey = 'defaultParam1',
-        apiKey = 'defaultParam1',
+        url = '0',
+        token = '0',
+        accessId = '0',
+        accessKey = '0',
+        apiKey = '0',
+        protocol = '0',
         generateKey = false,
     }: {
         url?: string;
@@ -31,6 +32,7 @@ export default class AddIntegration {
         accessId?: string;
         accessKey?: string;
         apiKey?: string;
+        protocol?: string;
         generateKey?: boolean;
     }){
         switch (this.integrationType){
@@ -52,22 +54,48 @@ export default class AddIntegration {
                 }
                 break;
             case "Azure Keys":
-
+                await this.page.getByPlaceholder('Your Azure key app id').fill(`${accessId}`); // App id
+                await this.page.getByPlaceholder('Your Azure key app password').fill(`${accessKey}`); // Password
+                await this.page.getByPlaceholder('Your Azure key tenant').fill(`${token}`); // Tenant
                 break;
             case "Bitbucket":
-
+                await this.page.getByPlaceholder('Your Bitbucket user name').fill(`${accessId}`); // User name
+                await this.page.getByPlaceholder('Your Bitbucket API app password').fill(`${token}`); // token
                 break;
             case "Bitbucket Server":
+                await this.page.getByPlaceholder('Your Bitbucket Server API Endpoint').fill(`${url}`); // URL
+                await this.page.getByPlaceholder('Your Bitbucket Server user name').fill(`${accessId}`); // User Name
+                await this.page.getByPlaceholder('Your Bitbucket Server API app password').fill(`${token}`); // Token
 
                 break;
             case "Distribution":
-
+                if(url != '0'){
+                    await this.page.getByPlaceholder('Your Distribution URL').fill(`${url}`); // URL
+                }
+                if(accessId != '0'){ // If we want to edit user
+                    await this.page.getByPlaceholder('Your Distribution user name').fill(`${accessId}`); // URL
+                }
+                if(!generateKey){
+                    await this.page.getByPlaceholder('Your Distribution API key').fill(`${apiKey}`); // API key
+                } else{
+                    // click on get api key
+                }
+                await this.page.getByPlaceholder('Your Distribution Signing Key Passphrase').fill(`${token}`); // Signing Key Passphrase
                 break;
             case "Docker Registry":
-
+                await this.page.getByPlaceholder('Your Docker Registry URL').fill(`${url}`); // URL
+                await this.page.getByPlaceholder('Your Docker Registry user name').fill(`${accessId}`); // User Name
+                await this.page.getByPlaceholder('Your Docker Registry app password').fill(`${token}`); // Token
                 break;
             case "File Server":
-
+                if (protocol !== 'FTP' && protocol !== 'SFTP' && protocol !== 'SMB') {
+                    assert.fail(`Invalid protocol type: ${protocol}`);
+                }
+                await this.page.getByPlaceholder('Select Protocol of your file server').click();
+                await this.page.locator('li').filter({ hasText: protocol }).click();
+                await this.page.getByPlaceholder('Your File Server URL').fill(`${url}`); // URL
+                await this.page.getByPlaceholder('Your File Server user name').fill(`${accessId}`); // User Name
+                await this.page.getByPlaceholder('Your File Server password').fill(`${token}`); // Password
                 break;
 
             case "Google Cloud":
