@@ -2,6 +2,9 @@ import { Page } from '@playwright/test';
 
 export default class AddNodepoolStatic{
     constructor(public page: Page){}
+    async navigateToCreateNodepool(baseURL?: string){
+        await this.page.goto(`${baseURL}/ui/admin/pipelines/nodePools/add/static`);
+    }
     async enterUsername(nodepoolName: string){
         await this.page.locator('//*[@id="app-pipe"]/div[2]/div/div[2]/div[1]/form/form/div[1]/div[1]/div/div/div/input').fill(nodepoolName); // Nodepool name
     }

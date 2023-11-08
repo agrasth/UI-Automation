@@ -24,14 +24,16 @@ test('Login to lnp', async ({ page, baseURL }) => {
     });
     
     // Add a Artifactory Integration
+    await page.goto(`${baseURL}/ui/admin/pipelines/adminIntegrations/create`);
     await addIntegration.enterIntegrationName("Artifactory_test");
     await addIntegration.selectIntegationType("Artifactory");
     await addIntegration.createIntegration({});
 
     // Add NodePool 
-    await page.getByRole('button', { name: ' Add Node Pool' }).click();
-    await page.locator('#dropdown-menu-1479').getByText('Static').click();
+    // await page.getByRole('button', { name: ' Add Node Pool' }).click();
+    // await page.locator('#dropdown-menu-1479').getByText('Static').click();
     const addNodepoolStatic = new AddNodepoolStatic(page)
+    await addNodepoolStatic.navigateToCreateNodepool(baseURL)
     await addNodepoolStatic.enterUsername('test_nodepool');
     await addNodepoolStatic.enterAdditionalSetting('ARM64','Ubuntu_20.04');
     await addNodepoolStatic.clickToSaveNodePool();
